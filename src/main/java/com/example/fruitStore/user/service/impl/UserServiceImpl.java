@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.example.fruitStore.user.dto.ChangePasswordRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     @Override
     public void promoteToManager(Long userId) {
         User user = userRepository.findById(userId)
@@ -32,6 +34,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     @Override
     public void demoteToUser(Long userId) {
         User user = userRepository.findById(userId)
@@ -46,6 +49,7 @@ public class UserServiceImpl implements UserService {
     }
 
     // ✅ ADMIN can delete USER or MANAGER (not ADMIN)
+    @Transactional
     @Override
     public void deleteUserByAdmin(Long userId) {
         User user = userRepository.findById(userId)
@@ -59,6 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     // ✅ MANAGER can delete only USER
+    @Transactional
     @Override
     public void deleteUserByManager(Long userId) {
         User user = userRepository.findById(userId)
@@ -80,6 +85,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteMyProfile(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -100,6 +106,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void changeMyPassword(String email, ChangePasswordRequest request) {
 
         User user = userRepository.findByEmail(email)

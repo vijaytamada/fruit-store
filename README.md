@@ -1,4 +1,4 @@
-# 🍎 FruitStore API – Spring Boot + JWT + Role Based Access
+# 🍎 FruitStore API – Spring Boot + JWT Auth + Role Based Access + Forget/Reset Password
 
 FruitStore is a Spring Boot REST API project built to practice and master **Spring Security** with **JWT Authentication** and **Role-Based Access Control (RBAC)**.
 
@@ -18,6 +18,7 @@ This project contains 3 roles:
 * Login user
 * JWT token generation & validation
 * Secured endpoints with role-based access
+* Forgot Password & Reset Password Implementation
 
 ### 👥 Role Based Access
 
@@ -91,6 +92,10 @@ com.example.fruitStore
 │       ├── BadRequestException.java
 │       └── ForbiddenException.java
 │
+├── mail
+│   ├──EmailService.java
+│   └──EmailServiceImpl.java
+│
 ├── security
 │   ├── SecurityConfig.java
 │   ├── JwtAuthFilter.java
@@ -105,10 +110,18 @@ com.example.fruitStore
 │   ├── dto
 │   │   ├── RegisterRequest.java
 │   │   ├── LoginRequest.java
-│   │   └── AuthResponse.java
+│   │   ├── AuthResponse.java
+│   │   ├── ForgotPasswordRequest.java
+│   │   └── ResetPasswordRequest.java
+│   ├── entity
+│   │   └── PasswordResetToken.java 
+│   ├── repository 
+│   │       └── PasswordResetTokenRepository.java
 │   └── service
 │       ├── AuthService.java
+│       ├── PasswordResetService.java
 │       └── impl
+│           ├──PasswordResetServiceImpl.java
 │           └── AuthServiceImpl.java
 │
 ├── user
@@ -177,16 +190,30 @@ Grant permissions to role (schema + tables).
 ### ✅ 3) Configure `application.properties`
 
 ```properties
+# PostgreSQL DB connection
 spring.datasource.url=jdbc:postgresql://localhost:5432/fruits_dev
 spring.datasource.username=fruits_dev_app
 spring.datasource.password=YOUR_PASSWORD
+spring.datasource.driver-class-name=org.postgresql.Driver
 
+# Hibernate settings
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 
-# JWT
-app.jwt.secret=THIS_IS_A_SUPER_LONG_SECRET_KEY_CHANGE_IT_12345678901234567890
-app.jwt.expiration-ms=86400000
+# JWT secret (any long random string)
+app.jwt.secret=THIS_IS_A_SUPER_LONG_SECRET_KEY_CHANGE_IT
+app.jwt.expiration-ms=3600000
+
+# Email configuration - Mailtrap (DEV) & AWS SES (Prod)
+spring.mail.host=sandbox.smtp.mailtrap.io
+spring.mail.port=587
+spring.mail.username=YOUR_MAILTRAP_USERNAME
+spring.mail.password=YOUR_MAILTRAP_PASSWORD
+spring.mail.from=no-reply@fruitstore.dev
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+app.reset-password.base-url=http://localhost:3000/reset-password
 ```
 
 ---
