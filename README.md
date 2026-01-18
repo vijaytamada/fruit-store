@@ -214,6 +214,7 @@ spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
 
 app.reset-password.base-url=http://localhost:3000/reset-password
+app.mail.app-name=Fruit Store
 ```
 
 ---
@@ -337,3 +338,4 @@ Login again → you become ADMIN.
 ## 👨‍💻 Author
 
 **Vijay Tamada**
+
